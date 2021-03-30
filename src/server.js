@@ -11,6 +11,7 @@ async function startServer() {
       return console.log(err);
     }
     console.log(`Server Up: port ${config.app.port}`);
+    console.log(process.env);
   });
 }
 
