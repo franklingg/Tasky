@@ -7,7 +7,9 @@ Inicialmente, será desenvolvido o Backend da aplicação em **Node.js**.
 ## Utilização
 Com o [Node.js](https://nodejs.org/en/) instalado na sua máquina, faça:
 > `git clone https://github.com/franklingg/Tasky.git`  
+>   
 > `npm install`  
+>   
 > `npm start`  
 
 ## Estruturação
@@ -16,18 +18,17 @@ Com o [Node.js](https://nodejs.org/en/) instalado na sua máquina, faça:
   A API seguirá o padrão REST, com a uniformidade de URIs e seguindo o protocolo HTTP.
 ## Rotas
 
-|     Requisição     | URI                                | Body                         | Retorno                                     | HTTP Status (Success, Error) |
-| ------------------ | ---------------------------------- | ---------------------------- | ------------------------------------------- | ---------------------------- |
-| GET                | produtos/                          |                              | Retorna todos os produtos existentes        | 200, 400                     |
-| POST               | categorias/*:categoryId*/produtos/ | name, quantity, value, image | Retorna o produto criado                    | 201, 400                     |
-| GET                | produtos/*:id*                     |                              | Retorna o produto com o id passado na URI   | 200, 404                     |
-| PUT                | produtos/:id                       | name, quantity, value, image | Retorna o produto atualizado                | 200, 400                     |
-| DELETE             | produtos/*:id*                     |                              | Deleta o produto. Sem retorno.              | 204, 400                     |
-| GET                | categorias/                        |                              | Retorna todas as categorias existentes      | 200, 400                     |
-| POST               | categorias/                        | name                         | Retorna a categoria criada                  | 201, 400                     |
-| GET                | categorias/*:id*                   |                              | Retorna a categoria com o ID passado na URI | 200, 404                     |
-| PUT                | categorias/*:id*                   | name                         | Retorna o produto atualizado                | 200, 400                     |
-| DELETE             | categorias/*:id*                   |                              | Deleta a categoria. Sem retorno.            | 204, 400                     |
+| Requisição | URI                   | Header    | Body                      | Retorno                                           | HTTP Status (Success, Error) |
+| ---------- | --------------------- | --------- |-------------------------- | ------------------------------------------------- | :--------------------------: |
+| GET        | users/                | userToken |                           | Retorna os dados do usuário                       | 200, 401                     |
+| POST       | users/register        |           | name, email, password     | Retorna o usuário criado                          | 201, 400                     |
+| PUT        | users/logout          | userToken |                           | Retira o acesso. Sem retorno.                     | 204, 401                     |
+| GET        | tasks/                | userToken |                           | Retorna a lista de tarefas                        | 200, 403                     |
+| GET        | tasks/sort/priority   | userToken |                           | Retorna a lista de tarefas em ordem de prioridade | 200, 403                     |
+| POST       | tasks/add             | userToken | taskName                  | Retorna a tarefa criada                           | 201, 400                     |
+| PUT        | tasks/update/name     | userToken | prevTaskName, newTaskName | Retorna a tarefa atualizada                       | 200, 400                     |
+| PUT        | tasks/update/priority | userToken | newPriority               | Retorna a tarefa atualizada                       | 200, 400                     |
+| DELETE     | tasks/remove          | userToken | taskName                  | Deleta a tarefa. Sem retorno                      | 204, 400                     |
 
 ### Módulos usados
   * [Bcrypt](https://www.npmjs.com/package/bcrypt): Para criptografia de senhas
