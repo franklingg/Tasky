@@ -25,9 +25,9 @@ Com o [Node.js](https://nodejs.org/en/) instalado na sua máquina, faça:
 | PUT        | users/logout          | userToken |                                        | Retira o acesso. Sem retorno.                     | 204, 401                     |
 | GET        | tasks/                | userToken |                                        | Retorna a lista de tarefas                        | 200, 403                     |
 | GET        | tasks/sort            | userToken |                                        | Retorna a lista de tarefas em ordem de prioridade | 200, 403                     |
-| POST       | tasks/add             | userToken | taskName                               | Retorna a tarefa criada                           | 201, 400                     |
-| PUT        | tasks/update          | userToken | prevTaskName, newTaskName, newPriority | Retorna a tarefa atualizada                       | 200, 400                     |
-| DELETE     | tasks/remove          | userToken | taskName                               | Deleta a tarefa. Sem retorno                      | 204, 400                     |
+| POST       | tasks/add             | userToken | name                                   | Retorna a tarefa criada                           | 201, 400                     |
+| PUT        | tasks/update/:id      | userToken | name, highPriority                     | Retorna a tarefa atualizada                       | 200, 400                     |
+| DELETE     | tasks/remove/:id      | userToken |                                        | Deleta a tarefa. Sem retorno                      | 204, 400                     |
 
 ### Módulos usados
   * [Bcrypt](https://www.npmjs.com/package/bcrypt): Para criptografia de senhas
