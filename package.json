@@ -30,8 +30,8 @@
     "@app": "src/app.js",
     "@config": "src/config/index.js",
     "@controller": "src/controller",
-    "@service": "src/service",
-    "@helper": "src/helper",
+    "@middlewares": "src/middlewares",
+    "@routes": "src/routes",
     "@model": "src/model"
   },
   "devDependencies": {

@@ -14,22 +14,8 @@ const UserSchema = new Schema({
         type: String,
         required: true,
     },
-    is_enable: {
-        type: Boolean,
-        required: false,
-        default: false
-    },
-    code: {
-        type: Number,
-        required: false,
-    },
     token_list: {
         type: [String]
-    },
-    id_fcm: {
-        type: String,
-        required: false,
-        default: null
     }
 },
     {
