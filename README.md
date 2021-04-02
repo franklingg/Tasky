@@ -21,6 +21,7 @@ Com o [Node.js](https://nodejs.org/en/) instalado na sua máquina, faça:
 | Requisição | URI                   | Header    | Body                                   | Retorno                                           | HTTP Status (Success, Error) |
 | ---------- | --------------------- | --------- |--------------------------------------- | ------------------------------------------------- | :--------------------------: |
 | GET        | users/                | userToken |                                        | Retorna os dados do usuário                       | 200, 401                     |
+| POST       | users/login           |           | email, password                        | Retorna os dados do usuário                       | 200, 400                     |
 | POST       | users/register        |           | name, email, password                  | Retorna o usuário criado                          | 201, 400                     |
 | PUT        | users/logout          | userToken |                                        | Retira o acesso. Sem retorno.                     | 204, 401                     |
 | GET        | tasks/                | userToken |                                        | Retorna a lista de tarefas                        | 200, 403                     |
