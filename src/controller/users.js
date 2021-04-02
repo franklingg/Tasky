@@ -1,6 +1,7 @@
 const User = require("@model/User");
 const bcrypt = require('bcrypt');
-const jwt = require("jsonwebtoken")
+const jwt = require('jsonwebtoken');
+require('dotenv/config');
 
 const createUserToken = (userId)=>{
     return jwt.sign({sub: userId}, process.env.JWT_SECRET, {expiresIn: '1d'});
@@ -20,10 +21,11 @@ const UserController = {
                 if(!same) return res.status(400).json("Senha incorreta");
                 user.token_list.push(createUserToken(user._id));
                 user.save();
+                user.password=undefined;
                 return res.status(200).json(user);
             });
             
-        });
+        }).select('+password');
 
     },registerUser(req,res) {
         const {name, email, password} = req.body;
@@ -34,10 +36,12 @@ const UserController = {
             if(err) return res.status(400).json("Erro na busca");
             if(data) return res.status(400).json("Usuário já cadastrado");
             
-            const user = new User(req.body);
-            user.save((err, data)=>{
+            User.create(req.body, (err, user)=>{
                 if(err) return res.status(400).json("Erro ao criar usuário");
-                return res.status(201).json(data);
+                user.token_list.push(createUserToken(user._id));
+                user.save();
+                user.password = undefined;
+                return res.status(201).json(user);
             })
         })
     },logout(req,res) {
