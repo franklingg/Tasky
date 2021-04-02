@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose');
-
+const bcrypt = require('bcrypt');
 const UserSchema = new Schema({
     name: {
         type: String,
@@ -12,14 +12,24 @@ const UserSchema = new Schema({
     },
     password: {
         type: String,
-        required: true,
+        required: true
     },
     token_list: {
-        type: [String]
+        type: [String],
+        default: []
     }
 },
     {
         timestamps: true,
     });
+
+UserSchema.pre('save', function(next){
+    let user = this;
+    if (!user.isModified('password')) return next();
+    bcrypt.hash(user.password, 10, (err, encrypted)=>{
+        user.password = encrypted;
+        return next();
+    });
+});
 
 module.exports = model('User', UserSchema);

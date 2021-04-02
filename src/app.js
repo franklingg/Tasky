@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use('/', indexRoute);
-//app.use('/users', usersRoute);
+app.use('/users', usersRoute);
 app.use('/tasks', tasksRoute);
 
 module.exports = app;
