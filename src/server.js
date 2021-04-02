@@ -10,7 +10,7 @@ async function startServer() {
     if (err) {
       return console.log(err);
     }
-    console.log(`Server Up: port ${config.app.port}`);
+    console.log(`Server Up at http://localhost:${config.app.port}`);
   });
 }
 
