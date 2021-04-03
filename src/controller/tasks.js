@@ -6,7 +6,7 @@ TaskController = {
             return res.status(200).json(tasks);
         })
         .catch(err=>{
-            return res.status(401).json("Ocorreu um erro: " + err);
+            return res.status(401).json(err);
         })
     },
 
@@ -15,17 +15,13 @@ TaskController = {
             return res.status(200).json(tasks);
         })
         .catch(err=>{
-            return res.status(401).json("Ocorreu um erro: " + err);
+            return res.status(401).json(err);
         })
     },
 
-    updateTask(req,res) {
-        Task.findByIdAndUpdate(req.params.id, req.body).then(doc=>{
-            return res.status(200).json("Task atualizada: " + doc);
-        })
-        .catch(err=>{
-            return res.status(400).json("Ocorreu um erro: " + err);
-        })
+    async updateTask(req,res) {
+        const task = await Task.findByIdAndUpdate(req.params.id, req.body,{new:true});
+        return res.status(200).json(task);
     },
 
 
@@ -34,9 +30,9 @@ TaskController = {
         task.userId = req.id;
         task.save((err,doc)=>{
             if (err){
-                return res.status(400).json("EROOOOOOO!!"+err);
+                return res.status(400).json(err);
             } else {
-                return res.status(201).json("Task criada com sucesso: "+doc);
+                return res.status(201).json(doc);
             }
         })
     },
@@ -44,7 +40,7 @@ TaskController = {
     removeTask(req,res) {
         Task.findByIdAndRemove(req.params.id, req.body).then(success=>{
             if(!success){
-                return res.status(400).json("Tarefa não existe");
+                return res.status(400);
             }
             return res.status(204);
         })

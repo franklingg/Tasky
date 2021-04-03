@@ -34,7 +34,7 @@ authorize = (req, res, next, type) => {
 
         const token_list = user.token_list;
         if (!token_list.includes(token)) {
-            return res.status(401).send({ error: 'Token inválido' });
+            return res.status(401).send({ error: 'Token inválido, usuário não contem esse token' });
         }
 
         req.token = token;

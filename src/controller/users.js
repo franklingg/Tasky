@@ -36,10 +36,10 @@ const UserController = {
             if(err) return res.status(400).json("Erro na busca");
             if(data) return res.status(400).json("Usuário já cadastrado");
             
-            User.create(req.body, (err, user)=>{
+            User.create(req.body, async (err, user)=>{
                 if(err) return res.status(400).json("Erro ao criar usuário");
                 user.token_list.push(createUserToken(user._id));
-                user.save();
+                await user.save();
                 user.password = undefined;
                 return res.status(201).json(user);
             })
