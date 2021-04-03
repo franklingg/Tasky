@@ -13,5 +13,5 @@ async function startServer() {
     console.log(`Server Up at http://localhost:${config.app.port}`);
   });
 }
-
+module.exports = app;
 startServer();
