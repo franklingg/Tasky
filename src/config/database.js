@@ -9,8 +9,6 @@ module.exports = () =>  {
         DB_URL = config.db.test;
     } else if (process.env.NODE_ENV === "dev") {
         DB_URL = config.db.develop;
-    } else {
-        DB_URL = config.db.develop;
     }
     
     mongoose.set('useFindAndModify', false);
