@@ -10,15 +10,16 @@ const createUserToken = (userId)=>{
 const UserController = {
     getUser(req,res) {
         return res.status(200).send(req.user);
-    },login(req,res) {
+    },
+    login(req,res) {
         const {email, password} = req.body;
 
-        if(!email || !password) return res.status(400).json("Dados insuficientes");
+        if(!email || !password) return res.status(400).send({error:"Dados insuficientes"});
 
         User.findOne({email},(err,user)=>{
-            if (err) return res.status(400).json("Erro na busca");
+            if (err) return res.status(400).send({error:"Erro na busca"});
             bcrypt.compare(password, user.password, (err,same)=>{
-                if(!same) return res.status(400).json("Senha incorreta");
+                if(!same) return res.status(400).send({error:"Senha incorreta"});
                 user.token_list.push(createUserToken(user._id));
                 user.save();
                 user.password=undefined;
@@ -27,24 +28,26 @@ const UserController = {
             
         }).select('+password');
 
-    },registerUser(req,res) {
+    },
+    registerUser(req,res) {
         const {name, email, password} = req.body;
 
-        if(!name || !email || !password) return res.status(400).json("Dados insuficientes");
+        if(!name || !email || !password) return res.status(400).send({error:"Dados insuficientes"});
         
         User.findOne({email}, (err, data)=>{
-            if(err) return res.status(400).json("Erro na busca");
-            if(data) return res.status(400).json("Usuário já cadastrado");
+            if(err) return res.status(400).send({error:"Erro na busca"});
+            if(data) return res.status(400).send({error:"Usuário já cadastrado"});
             
             User.create(req.body, async (err, user)=>{
-                if(err) return res.status(400).json("Erro ao criar usuário");
+                if(err) return res.status(400).send({error:"Erro ao criar usuário"});
                 user.token_list.push(createUserToken(user._id));
                 await user.save();
                 user.password = undefined;
                 return res.status(201).json(user);
             })
         })
-    },logout(req,res) {
+    },
+    logout(req,res) {
         const idxToken = req.user.token_list.indexOf(req.token);
         if(idxToken > -1) req.user.token_list.splice(idxToken,1);
         req.user.save();

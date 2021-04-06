@@ -6,7 +6,7 @@ TaskController = {
             return res.status(200).json(tasks);
         })
         .catch(err=>{
-            return res.status(401).json(err);
+            return res.status(400).send({ error: 'Tarefas não encontradas' });
         })
     },
 
@@ -15,25 +15,27 @@ TaskController = {
             return res.status(200).json(tasks);
         })
         .catch(err=>{
-            return res.status(401).json(err);
+            return res.status(400).send({ error: 'Tarefas não encontradas' });
         })
     },
 
     async updateTask(req,res) {
-        const task = await Task.findByIdAndUpdate(req.params.id, req.body,{new:true});
-        return res.status(200).json(task);
+        try{
+            const task = await Task.findByIdAndUpdate(req.params.id, req.body,{new:true});
+            return res.status(200).json(task);
+        } catch(err){
+            return res.status(400).send({error: "Tarefa não atualizada"});
+        }
     },
-
 
     createTask(req,res) {
         const task = new Task(req.body);
         task.userId = req.id;
-        task.save((err,doc)=>{
-            if (err){
-                return res.status(400).json(err);
-            } else {
-                return res.status(201).json(doc);
-            }
+        task.save((err,info)=>{
+            if (err)
+                return res.status(400).send({error: "Tarefa não criada"});
+
+            return res.status(201).json(info);
         })
     },
 
