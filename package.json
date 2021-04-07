@@ -26,7 +26,6 @@
     "nodemon": "^2.0.7"
   },
   "_moduleAliases": {
-    "@": "src",
     "@app": "src/app.js",
     "@config": "src/config/index.js",
     "@controller": "src/controller",

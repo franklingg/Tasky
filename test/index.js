@@ -1,19 +1,14 @@
 const chai = require('chai');
-const server = require('../src/server');
 const chai_http = require('chai-http');
 const should = chai.should();
-const User = require('../src/model/User');
-const Task = require('../src/model/Task');
 const MongoInMemory = require('mongodb-memory-server');
-const databaseConfig = require('../src/config/database');
 const jwt = require('jsonwebtoken');
-const { assert } = require('chai');
 
-const HTTP_CODE_OK = 200;
-const HTTP_CODE_CREATED = 201;
-const HTTP_CODE_DELETED = 204;
-const HTTP_CODE_NOT_AUTHENTICATED = 401;
-const HTTP_CODE_NOT_FOUND = 404;
+const server = require('../src/server');
+const databaseConfig = require('../src/config/database');
+const User = require('@model/User');
+const Task = require('@model/Task');
+const httpCodes = require('./status');
 
 chai.use(chai_http);
 
@@ -46,7 +41,7 @@ describe('Users Test', async function () {
             .get('/users')
             .set('authorization',incorrect_token)
             .end(function (err, response) {
-                response.should.have.status(HTTP_CODE_NOT_AUTHENTICATED);
+                response.should.have.status(httpCodes.failure.AUTHENTICATION);
                 done();
             })
     });
@@ -56,7 +51,7 @@ describe('Users Test', async function () {
         const response = await chai.request(server)
         .get('/users')
         .set({'authorization': "Bearer "+ token})
-        response.should.have.status(HTTP_CODE_OK);
+        response.should.have.status(httpCodes.success.OK);
         response.body.should.be.a("object");
         response.body.should.have.property("name");
         response.body.should.have.property("_id");
@@ -69,8 +64,8 @@ describe('Users Test', async function () {
             .post('/user/login')
             .send({ "email": incorrect_email, "password": "senha" })
             .end(function (err, response) {
-                response.should.have.status(HTTP_CODE_NOT_FOUND);
-                done()
+                response.should.have.status(httpCodes.failure.NOT_FOUND);
+                done();
             })
     });
 
@@ -80,12 +75,12 @@ describe('Users Test', async function () {
             .post('/users/register')
             .send({"name":"Augusto","email":"test@codexjr.com.br", "password":"senha"})
             .end((err,response)=>{
-                response.should.have.status(201);
+                response.should.have.status(httpCodes.success.CREATED);
                 response.body.should.be.a("object");
                 response.body.should.have.property("email");
                 response.body.should.have.property("name");
                 response.body.should.have.property("token_list");
-                done()
+                done();
             })
         })
     });
@@ -96,7 +91,7 @@ describe('Users Test', async function () {
             .post('/users/login')
             .send({ "email": correct_email, "password": "senha" })
             .end(function (err, response) {
-                response.should.have.status(HTTP_CODE_OK);
+                response.should.have.status(httpCodes.success.OK);
                 response.body.should.have.property('name');
                 response.body.should.have.property('email');
                 response.body.should.have.property('token_list');
@@ -113,7 +108,7 @@ describe('Tasks Test', async function(){
             .set('authorization', 'Bearer '+ token)
             .send({'name':'Atividade de p2'})
             .end(function (err, response) {
-                response.should.have.status(HTTP_CODE_CREATED);
+                response.should.have.status(httpCodes.success.CREATED);
                 response.body.should.be.a('object');
                 response.body.should.have.property('name');
                 response.body.should.have.property('highPriority');
@@ -127,7 +122,7 @@ describe('Tasks Test', async function(){
             .set('authorization', 'Bearer '+ token)
             .send({'name':'Atividade de p2'})
             .end(function (err, response) {
-                response.should.have.status(HTTP_CODE_CREATED);
+                response.should.have.status(httpCodes.success.CREATED);
                 response.body.should.have.property('name');
                 response.body.should.have.property('highPriority');
             })
@@ -141,7 +136,7 @@ describe('Tasks Test', async function(){
             .set('authorization', 'Bearer '+ token)
             .send({'highPriority':'true'})
             .end(function (err, response) {
-                response.should.have.status(HTTP_CODE_OK);
+                response.should.have.status(httpCodes.success.OK);
                 response.body.should.have.property('name');
                 response.body.should.have.property('highPriority');
                 response.body.highPriority.should.be.true;
@@ -155,7 +150,7 @@ describe('Tasks Test', async function(){
             .delete('/tasks/remove/'+idTask)
             .set('authorization', 'Bearer '+ token)
             .end(function (err, response) {
-                response.should.have.status(HTTP_CODE_DELETED);
+                response.should.have.status(httpCodes.success.DELETED);
                 response.body.should.be(undefined);
             })
     });
