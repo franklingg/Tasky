@@ -1,56 +1,56 @@
 const Task = require('@model/Task');
 
 TaskController = {
-    async getTasks(req,res) {
+    async getTasks(req, res) {
         try {
-            const tasks = await Task.find({userId: req.id});
+            const tasks = await Task.find({ userId: req.id });
             return res.status(200).send(tasks);
-        } catch(err) {
+        } catch (err) {
             return res.status(400).send({ error: 'Tarefas não encontradas' });
         }
     },
 
-    async getTasksSort(req,res) {
+    async getTasksSort(req, res) {
         try {
-            const tasks = await Task.find({userId: req.id}).sort({highPriority:-1,name:1})
+            const tasks = await Task.find({ userId: req.id }).sort({ highPriority: -1, name: 1 })
             return res.status(200).send(tasks);
-        } catch(err) {
+        } catch (err) {
             return res.status(400).send({ error: 'Tarefas não encontradas' });
         }
     },
 
-    async updateTask(req,res) {
-        try{
-            const task = await Task.findByIdAndUpdate(req.params.id, req.body,{new:true});
+    async updateTask(req, res) {
+        try {
+            const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
             return res.status(200).send(task);
-        } catch(err){
-            return res.status(400).send({error: "Tarefa não atualizada"});
+        } catch (err) {
+            return res.status(400).send({ error: "Tarefa não atualizada" });
         }
     },
 
-    async createTask(req,res) {
+    async createTask(req, res) {
         try {
             var task = new Task(req.body);
             task.userId = req.id;
-        } catch(err) {
-            return res.status(400).send({error: "Tarefa não criada"});
+        } catch (err) {
+            return res.status(400).send({ error: "Tarefa não criada" });
         }
         try {
             const response = await task.save();
             return res.status(201).send(response);
-        } catch(err) {
-            return res.status(400).send({error: "Tarefa não criada"});
+        } catch (err) {
+            return res.status(400).send({ error: "Tarefa não criada" });
         }
     },
 
-    async removeTask(req,res) {
+    async removeTask(req, res) {
         try {
             await Task.findByIdAndRemove(req.params.id);
-        } catch(err) {
-            return res.status(400).send();
+            return res.status(204).send(undefined);
+        } catch (err) {
+            return res.status(400).send({ error: "Tarefa não encontrada" });
         }
-        return res.status(204).send();
     }
 }
 
-module.exports=TaskController;
+module.exports = TaskController;

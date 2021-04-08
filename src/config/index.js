@@ -1,10 +1,10 @@
 module.exports = {
-  app : {
-    port : process.env.PORT,
+  app: {
+    port: process.env.PORT,
   },
-  db : {
-    production : process.env.DB_URL_PROD,
-    test : process.env.DB_URL_TEST,
+  db: {
+    production: process.env.DB_URL_PROD,
+    test: process.env.DB_URL_TEST,
     develop: process.env.DB_URL_DEV,
   }
 };
