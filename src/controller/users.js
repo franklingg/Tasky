@@ -1,7 +1,6 @@
 const User = require("@model/User");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-require('dotenv/config');
 
 const createUserToken = (userId)=>{
     return jwt.sign({sub: userId}, process.env.JWT_SECRET, {expiresIn: '1d'});
@@ -11,47 +10,78 @@ const UserController = {
     getUser(req,res) {
         return res.status(200).send(req.user);
     },
-    login(req,res) {
+    async login(req,res) {
         const {email, password} = req.body;
 
         if(!email || !password) return res.status(400).send({error:"Dados insuficientes"});
 
-        User.findOne({email},(err,user)=>{
-            if (err) return res.status(400).send({error:"Erro na busca"});
-            bcrypt.compare(password, user.password, (err,same)=>{
-                if(!same) return res.status(400).send({error:"Senha incorreta"});
-                user.token_list.push(createUserToken(user._id));
-                user.save();
-                user.password=undefined;
-                return res.status(200).json(user);
-            });
-            
-        }).select('+password');
+        try {
+            var user = await User.findOne({email}).select('+password');
+        } catch(err) {
+            return res.status(400).send({error:"Erro na busca"});
+        }
 
+        try {
+            var same = await bcrypt.compare(password, user.password);
+        } catch(err){
+            return res.status(400).send({error:"Senha incorreta"});
+        }
+
+        if(!same) return res.status(400).send({error:"Senha incorreta"});
+        
+        user.token_list.push(createUserToken(user._id));
+        
+        try {
+            await user.save();
+        } catch(err) {
+            return res.status(400).send({error:"Erro na busca"});
+        }
+
+        user.password=undefined;
+        return res.status(200).send(user);
     },
-    registerUser(req,res) {
+    async registerUser(req,res) {
         const {name, email, password} = req.body;
 
         if(!name || !email || !password) return res.status(400).send({error:"Dados insuficientes"});
         
-        User.findOne({email}, (err, data)=>{
-            if(err) return res.status(400).send({error:"Erro na busca"});
-            if(data) return res.status(400).send({error:"Usuário já cadastrado"});
-            
-            User.create(req.body, async (err, user)=>{
-                if(err) return res.status(400).send({error:"Erro ao criar usuário"});
-                user.token_list.push(createUserToken(user._id));
-                await user.save();
-                user.password = undefined;
-                return res.status(201).json(user);
-            })
-        })
+        try {
+            const user = await User.findOne({email});
+            if (user) return res.status(400).send({error:"Usuário já cadastrado"});
+        } catch(err) {
+            return res.status(400).send({error:"Erro na busca"});
+        }
+
+        try {
+            var newUser = await User.create(req.body);
+        } catch(err) {
+            return res.status(400).send({error:"Erro ao criar usuário"});
+        }
+
+        newUser.token_list.push(createUserToken(newUser._id));
+
+        try {
+            await newUser.save();
+        } catch(err) {
+            return res.status(400).send({error:"Erro ao criar usuário"});
+        }
+
+        newUser.password = undefined;
+        return res.status(201).send(newUser);
     },
-    logout(req,res) {
+
+    async logout(req,res) {
         const idxToken = req.user.token_list.indexOf(req.token);
+        
         if(idxToken > -1) req.user.token_list.splice(idxToken,1);
-        req.user.save();
-        return res.status(204).json("Log out realizado com sucesso");
+        
+        try {
+            req.user.save();
+        } catch(err) {
+            return res.status(400).send({error:"Erro ao realizar log out"});
+        }
+        
+        return res.status(204).send("Log out realizado com sucesso");
     }
 }
 

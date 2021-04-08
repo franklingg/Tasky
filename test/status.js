@@ -7,6 +7,7 @@ module.exports = {
         DELETED: 204
     },
     failure:{
+        COMMON: 400,
         AUTHENTICATION: 401,
         NOT_FOUND: 404
     }
