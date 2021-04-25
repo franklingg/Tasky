@@ -1,0 +1,40 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@media (max-width: 1080px) {
+    html{
+        font-size: 93.75%;
+    }
+}
+
+@media (max-width: 720px) {
+    html{
+        font-size: 87.5%;
+    }
+}
+
+body{
+    color: black;
+    background-color: rgb(245, 245, 245);
+}
+
+body, input, textarea, button {
+    
+    outline: none;
+    font: 400 1rem 'Roboto', sans-serif;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.5rem;
+}
+
+button {
+    cursor: pointer;
+}
