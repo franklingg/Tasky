@@ -1,12 +1,12 @@
 import React from 'react';
-import Button from './Button';
 
-export function Header() {
+export default function Header() {
 
     return(
         <div className='header'>
             <h1>Esse é o header</h1>
-            <a>Login</a>
+            <a href="/">Login</a>
+            <a href="/tasks">Tasks</a>
         </div>
     );
 }

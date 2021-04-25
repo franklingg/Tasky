@@ -1,12 +1,16 @@
 import './App.css';
-import { Header } from './components/Header';
-
+import { Switch, Route, BrowserRouter } from "react-router-dom";
+import Tasks from "./pages/Tasks";
+import Home from "./pages/Home";
 
 function App() {
   return (
-    <>
-      <Header />
-    </>
+    <BrowserRouter>
+      <Switch>
+        <Route path="/" exact component={Home} />
+        <Route path="/tasks" component={Tasks} />
+      </Switch>
+    </BrowserRouter>
   );
 }
 

@@ -1,0 +1,13 @@
+.background {
+    padding: 30px;
+}
+
+.tasksContainer {
+    display: flex;
+    flex-wrap: wrap;
+    overflow-y: scroll;
+}
+
+.task {
+    width:33%;
+}

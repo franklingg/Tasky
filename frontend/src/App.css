@@ -1,7 +1,43 @@
 .header {
-  background-color: purple;
-  color:white;
+  padding: 30px;
+  background-color: #ebd3ef;
+  color:black;
   display: flex;
   align-items: center;
   justify-content: flex-start;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI';
+  background-color: rgb(245, 245, 245);
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+input {
+  border: 1px solid #a1a1a1;
+  border-radius: 6px;
+  outline: none;
+  padding: 0px 5px;
+}
+
+input:focus {  
+  border-color: #0070e9;
+}
+
+button {
+  border-radius: 6px;
+  background-color: #0070e9;
+  color: #ffffff;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+}
+
+a {
+  text-decoration: none;
+  color: #0070e9;
 }
