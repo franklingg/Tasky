@@ -3,7 +3,7 @@ import Header from '../../components/Header';
 import './styles.css';
 import api from '../../service/api';
 
-export default function Home() {
+export default function Home(props) {
     const [registerForm, setRegisterForm] = React.useState(true);
     const [name, setName] = React.useState('');
     const [email, setEmail] = React.useState('');
@@ -20,7 +20,11 @@ export default function Home() {
         
         const URI = '/users/' + (registerForm ? 'register' : 'login');
         api.post(URI,data)
-        .then(res=>alert(res.status))
+        .then(response=>{
+            const token = response.data.token_list.slice(-1)[0];
+            localStorage.setItem("token", token);
+            props.history.push("/tasks");
+        })
         .catch(err=> alert(err.response.data.error));
     }
 
