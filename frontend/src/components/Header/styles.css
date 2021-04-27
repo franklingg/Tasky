@@ -1,0 +1,35 @@
+.header{
+    background-color: #ebd3ef;
+    padding: 1rem 4rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: stretch;
+    height: 5.5rem;
+}
+.header > * {
+    transition: all 0.15s ease-out;
+}
+
+.header > *:hover{
+    transform: scale(1.1);
+}
+
+.header__logo, .header__logo-img{
+    height: 100%;
+}
+
+.header__login{
+    margin-left: auto;
+    margin-right: 3rem;
+}
+
+.header__login, .header__tasks{
+    text-decoration: none;
+    color: black;
+    display: flex;
+    align-items: center;
+    border: 2px solid white;
+    background-color: transparent;
+    padding: 0 2rem;
+    border-radius: 35px;
+}
