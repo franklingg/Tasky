@@ -13,14 +13,50 @@
 
 .home__register, .home__login{
     padding: 1.5rem 0;
-    border: 1px solid grey;
+    border: 2px solid #83498C;
+    border-radius: 8px;
+    box-shadow: 0px 2px 3px 3px rgba(0,0,0,0.1);
     width: 26rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.7rem;
+    color: #83498C;
 }
 
 .home__form-title{
     padding-bottom: 1rem;
+}
+
+.home__form-field{
+    padding-left: 0.6rem;
+    height: 2rem;
+    width: 80%;
+    margin-bottom: 0.4rem;
+}
+.home__form-field:focus{
+    border: 2px solid #83498C;
+}
+
+.home__form-error{
+    height: 2rem;
+}
+
+.home__form-btn{
+    margin-top: 0.5rem;
+    height: 2.2rem;
+    width: 50%;
+    background-color: #BE70CB;
+    color: white;
+    border-radius: 4px;
+    border: 0;
+    transition: all 0.15s ease-in;
+}
+
+.home__form-btn:hover{
+    transform: scale(1.1);
+}
+
+.home_form-error{
+    color: red;
 }

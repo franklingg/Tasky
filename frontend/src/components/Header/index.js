@@ -9,7 +9,7 @@ export default function Header(props) {
             <Link className='header__logo' to="/">
                 <img className='header__logo-img' src='logo.png' alt='Logotipo do Tasky' />
             </Link>
-            <button className='header__login' onClick={props.toggler}>{props.isRegister? 'Login':'Register'}</button>
+            <button className='header__login' onClick={props.toggler}>{props.isRegister? 'Login':'Registrar'}</button>
             <Link className='header__tasks' to="/tasks">Minhas Tarefas</Link>
         </div>
     );
