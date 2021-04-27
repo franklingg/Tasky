@@ -1,6 +1,6 @@
 .header{
     background-color: #ebd3ef;
-    padding: 1rem 4rem;
+    padding: 0.2rem 4rem;
     display: flex;
     justify-content: flex-end;
     align-items: stretch;
@@ -11,7 +11,7 @@
 }
 
 .header > *:hover{
-    transform: scale(1.1);
+    transform: scale(1.05);
 }
 
 .header__logo, .header__logo-img{
@@ -24,12 +24,14 @@
 }
 
 .header__login, .header__tasks{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
     text-decoration: none;
-    color: black;
+    color: white;
     display: flex;
     align-items: center;
-    border: 2px solid white;
-    background-color: transparent;
+    background-color: #83498C;
     padding: 0 2rem;
     border-radius: 35px;
 }
