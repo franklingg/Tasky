@@ -17,6 +17,7 @@
 }
 
 body{
+    --main-color: #ebd3ef;
     color: black;
     background-color: rgb(245, 245, 245);
 }
@@ -25,6 +26,16 @@ body, input, textarea, button {
     
     outline: none;
     font: 400 1rem 'Roboto', sans-serif;
+}
+
+input {
+    border: 1px solid #a1a1a1;
+    border-radius: 6px;
+    padding: 0px 5px;
+  }
+  
+input:focus {  
+border-color: #0070e9;
 }
 
 h1 {

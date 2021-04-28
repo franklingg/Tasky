@@ -1,5 +1,6 @@
 import React,{useEffect,useState} from 'react';
 import Header from '../../components/Header';
+import MyInput from '../../components/MyInput';
 import api from '../../service/api';
 import './styles.css';
 
@@ -7,89 +8,129 @@ export default function Tasks() {
     
     const [tasks,setTasks] = useState([]);
     const [selectedTask,setSelectedTask] = useState(null);
-    const [formValues,setFormValues] = useState({name:"",prioridade:""});
+    const [formValues,setFormValues] = useState({name:"",prioridade:"baixa"});
+    const [sorting,setSorting] = useState(true);
+    const token=localStorage.getItem('token');
+    const [loading,setLoading] = useState(true);
+
+    useEffect(async()=>{
+        await refreshPage();
+    },[sorting]);
+
+    async function refreshPage() {
+        setLoading(true);
+        const command = sorting ? 'tasks/' : 'tasks/sort/';
+        const response = await api.get(command,{'headers':{'authorization':'Bearer '+token}});
+        setTasks(response.data);
+        setLoading(false)
+    }
 
     function handleTaskFocus(event,task) {
-        console.log(event.target);
-        console.log(task);
+        setSelectedTask(task);
+        console.log(selectedTask);
+    }
+
+    async function handleDeleteTask() {
+        const response = await api.delete('tasks/remove/'+selectedTask._id,{'headers':{'authorization':'Bearer '+token}});
+        setSelectedTask(null);
+        await refreshPage();
     }
 
     function changeSorting(event) {
-
+        setSorting(!sorting);
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
-        console.log(formValues)
+        await api.post('tasks/add',{'name':formValues.name,'highPriority':formValues.prioridade==='alta'},{'headers':{'authorization':'Bearer '+token}});
+        await refreshPage();
     }
 
-    function handleUpdate(event) {
-        const Name=event.target.name;
-        const value=event.target.value;
-        setFormValues({...formValues,[Name]:value});
+    async function handleUpdate(event) {
+        event.preventDefault();
+        await api.put('tasks/update/'+selectedTask._id,{'name':selectedTask.name,'highPriority':selectedTask.highPriority},{'headers':{'authorization':'Bearer '+token}});
+        await refreshPage();
+        setSelectedTask(null);
     }
 
-    useEffect(async()=>{
-        const response = await api.get('api/?results=10');
-        setTasks(response.data.results);
-    },[])
+    function handleUpdateInput(event) {
+        setFormValues({...formValues,[event.target.name]:event.target.value});
+    }
     
     return(
         <>
             <Header/>
             <div className="background">
+                {loading?<div className="loadingContainer"><i className="fa fa-cog fa-spin" /></div>:
                 <div className="tasksContainer">
                     {tasks.map(task=>{
                         return(
-                            <div key={task.name.first} onClick={(event)=>handleTaskFocus(event,task)}>
-                                Tarefa: {task.name.first} {task.name.last}<br/>
-                                Prioridade: 
+                            <div key={task._id} onClick={(event)=>handleTaskFocus(event,task)}>
+                                <p>{task.name}</p>
+                                <p>Prioridade: {task.highPriority?'Alta':'Baixa'}</p>
                             </div>
                         );
                     })}
-                </div>
-                {
+                    {tasks.length===0 && <span>Você ainda não criou nenhuma tarefa.</span>}
+                </div>}
                 <div>
                     <div className="sortTasksContainer">
-                        Ordernar tarefas por: 
+                        <h3>Ordernar tarefas por</h3>
                         <div>
                             <label> 
-                                <input type="radio" name="sort" id="data"  value="data" onChange={changeSorting} checked/>
+                                <input type="radio" name="sort" id="data" onChange={changeSorting} checked={sorting}/>
                                 Data de criação
                             </label>
-                        </div>
-
-                        <div>
                             <label>
                                 
-                                <input type="radio"  name="sort" id="priority" value="priority" onChange={changeSorting}/>
+                                <input type="radio"  name="sort" id="priority" onChange={changeSorting} checked={!sorting}/>
                                 Prioridade
                             </label>
                         </div>
                     </div>
+                    {selectedTask===null?
                     <div className="newTasksContainer">
-                        Criar nova tarefa<br/>
+                        <h3>Criar nova tarefa</h3>
                         <form onSubmit={handleSubmit}>
-                            <label>
-                                Nome:
-                                <input type="text" name="name" required onChange={handleUpdate} value={formValues.name}/>
-                            </label>
-                            <div>
+                            <MyInput label='Nome' varName='name' onChange={handleUpdateInput} value={formValues.name}/>
+                            <div className='checkboxesWrapper'>
+                                <h4>Prioridade</h4>
                                 <label>
-                                    <input type="radio"  name="prioridade" onChange={handleUpdate} value="alta" checked={formValues.prioridade==="alta"}/>
+                                    <input type="radio"  name="prioridade" onChange={handleUpdateInput} value="alta" checked={formValues.highPriority==="alta"}/>
                                     Alta
                                 </label>
-                            </div>
-                            <div>
                                 <label>
-                                    <input type="radio"  name="prioridade" onChange={handleUpdate} value="baixa" checked={formValues.prioridade==="baixa"}/>
+                                    <input type="radio"  name="prioridade" onChange={handleUpdateInput} value="baixa" checked={formValues.highPriority==="baixa"}/>
                                     Baixa
                                 </label>
                             </div>
-                            <button type="submit">Criar tarefa</button>
+                            <div className='buttonWrapper'>
+                                <button type="submit">Criar tarefa</button>
+                            </div>
                         </form>
-                    </div>
-                </div>}
+                    </div>:
+                    <div className="newTasksContainer">
+                        <h3>Editar tarefa</h3>
+                        <form onSubmit={handleUpdate}>
+                            <MyInput label='Nome' varName='name' onChange={(event)=>setSelectedTask({...selectedTask,[event.target.name]:event.target.value})} value={selectedTask.name}/>
+                            <div className='checkboxesWrapper'>
+                                <h4>Prioridade</h4>
+                                <label>
+                                    <input type="radio"  name="highPriority" onChange={(event)=>setSelectedTask({...selectedTask,[event.target.name]:true})} value={true} checked={selectedTask.highPriority}/>
+                                    Alta
+                                </label>
+                                <label>
+                                    <input type="radio"  name="highPriority" onChange={(event)=>setSelectedTask({...selectedTask,[event.target.name]:false})} value={false} checked={!selectedTask.highPriority}/>
+                                    Baixa
+                                </label>
+                            </div>
+                            <div className='buttonWrapper'>
+                                <button type="submit">Editar tarefa</button>
+                                <button onClick={handleDeleteTask}>Excluir tarefa</button>
+                            </div>
+                        </form>
+                    </div>}
+                </div>
             </div>
         </>
     )

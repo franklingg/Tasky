@@ -13,26 +13,95 @@
     flex-wrap: wrap;
     overflow-y:auto;
     width: 60vw;
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 5px;
+}
+
+.loadingContainer{
+    display: flex;
+    width: 60vw;
+    justify-content: center;
+    align-items: center;
+}
+
+.loadingContainer i{
+    font-size: 100px;
+    color: black;
 }
 
 .tasksContainer div {
     width: 31%;
     height: 8rem;
-    padding: 20px 5px;
+    padding: 20px 10px;
     background-color: white;
     border: 2px solid var(--main-color);
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
     border-radius: 32px;
-    margin-bottom: 20px;
+    margin: 0 15px 20px 0;
     box-sizing: border-box;
 }
 
-.sortTasksContainer {
+.sortTasksContainer, .newTasksContainer{
+    margin: 15px;
+    padding: 10px;
+    border: 2px solid var(--main-color);
+    border-radius: 10px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 30vw;
+    
 }
 
-.newTasksContainer {
-    width: 30vw;
+.sortTasksContainer > div{
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.newTasksContainer > form{
+    padding: 15px;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.sortTasksContainer label, .newTasksContainer label{
+    color: #343434;
+}
+
+.sortTasksContainer > h3,.newTasksContainer >h3, form h4 {
+    font-weight: 300;
+}
+
+.buttonWrapper {
+    width:100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+input[type='radio'] {
+    margin-right: 5px;
+}
+
+form > div {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    border-radius: 6px;
+    background-color: var(--main-color);
+    color: black;
+    font-weight: bold;
+    border: none;
+    padding: 10px;
 }
