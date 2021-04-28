@@ -23,7 +23,6 @@ body{
 }
 
 body, input, textarea, button {
-    
     outline: none;
     font: 400 1rem 'Roboto', sans-serif;
 }
@@ -46,6 +45,6 @@ h2 {
     font-size: 1.5rem;
 }
 
-button {
+button, input[type="submit"] {
     cursor: pointer;
 }

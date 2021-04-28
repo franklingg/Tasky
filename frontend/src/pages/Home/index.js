@@ -8,6 +8,7 @@ export default function Home(props) {
     const [name, setName] = React.useState('');
     const [email, setEmail] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const [errorMsg, setErrorMsg] = React.useState('');
 
     const toggleForm = ()=> setRegisterForm(!registerForm);
     const changeName = event => setName(event.target.value);
@@ -17,6 +18,7 @@ export default function Home(props) {
     const handleSubmit = (event)=>{
         event.preventDefault();
         const data = {name, email, password};
+        setErrorMsg('');
         
         const URI = '/users/' + (registerForm ? 'register' : 'login');
         api.post(URI,data)
@@ -25,7 +27,7 @@ export default function Home(props) {
             localStorage.setItem("token", token);
             props.history.push("/tasks");
         })
-        .catch(err=> alert(err.response.data.error));
+        .catch(err=> setErrorMsg(`${err.response.data.error}. Tente novamente`));
     }
 
     return(
@@ -38,15 +40,16 @@ export default function Home(props) {
                     <>
                     <h2 className='home__form-title'>Cadastre-se</h2>
                     <label>Nome</label>
-                    <input type="text" value={name} onChange={changeName} />
+                    <input type="text" value={name} className="home__form-field" onChange={changeName} />
                     </> :
                     <h2 className='home__form-title'>Faça Login</h2>
                     }
                     <label>Email</label>
-                    <input type="email" value={email} onChange={changeEmail} />
+                    <input type="email" className="home__form-field" value={email} onChange={changeEmail} />
                     <label>Senha</label>
-                    <input type="password" value={password} onChange={changePassword} />
-                    <input type="submit" value="Entrar" />
+                    <input type="password" className="home__form-field" value={password} onChange={changePassword} />
+                    <input type="submit" className="home__form-btn" value="Entrar" />
+                    <p className="home_form-error">{errorMsg}</p>
                 </form>
             </main>
         </>
