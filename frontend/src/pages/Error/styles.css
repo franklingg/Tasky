@@ -1,0 +1,27 @@
+
+.forbidden{
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    gap: 6rem;
+}
+
+.forbidden__image{
+    height: 100%;
+}
+
+.forbidden__info{
+    margin-top: 8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.forbidden__info-title{
+    color: var(--purple);
+}
+
+.forbidden__info-message{
+    line-height: 1.5rem;
+    color: var(--purple-dark);
+}

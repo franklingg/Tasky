@@ -16,10 +16,17 @@
     }
 }
 
+:root{
+    --white: rgb(245, 245, 245);
+    --purple-lighter: #ebd3ef;
+    --purple: #BE70CB;
+    --purple-dark: #83498C;
+    --red: red;
+    --grey: #343434;
+}
+
 body{
-    --main-color: #ebd3ef;
     color: black;
-    background-color: rgb(245, 245, 245);
 }
 
 body, input, textarea, button {

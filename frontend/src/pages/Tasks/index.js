@@ -4,7 +4,7 @@ import MyInput from '../../components/MyInput';
 import api from '../../service/api';
 import './styles.css';
 
-export default function Tasks() {
+export default function Tasks(props) {
     
     const [tasks,setTasks] = useState([]);
     const [selectedTask,setSelectedTask] = useState(null);
@@ -12,6 +12,13 @@ export default function Tasks() {
     const [sorting,setSorting] = useState(true);
     const token=localStorage.getItem('token');
     const [loading,setLoading] = useState(true);
+
+    const middleware = () => Boolean(localStorage.getItem('token'));
+
+    function logout(){
+        localStorage.removeItem('token');
+        props.history.push('/');
+    }
 
     useEffect(async()=>{
         await refreshPage();
@@ -31,7 +38,7 @@ export default function Tasks() {
     }
 
     async function handleDeleteTask() {
-        const response = await api.delete('tasks/remove/'+selectedTask._id,{'headers':{'authorization':'Bearer '+token}});
+        await api.delete('tasks/remove/'+selectedTask._id,{'headers':{'authorization':'Bearer '+token}});
         setSelectedTask(null);
         await refreshPage();
     }
@@ -58,8 +65,9 @@ export default function Tasks() {
     }
     
     return(
-        <>
-            <Header/>
+        middleware() ?
+            <>
+            <Header action={logout} first="Logout"/>
             <div className="background">
                 {loading?<div className="loadingContainer"><i className="fa fa-cog fa-spin" /></div>:
                 <div className="tasksContainer">
@@ -132,6 +140,9 @@ export default function Tasks() {
                     </div>}
                 </div>
             </div>
-        </>
+            </> :
+            <>
+            {props.history.push('/forbidden')}
+            </>
     )
 } 
