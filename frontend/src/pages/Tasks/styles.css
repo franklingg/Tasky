@@ -8,12 +8,21 @@
     box-sizing: border-box;
 }
 
+.center {
+    justify-content:center;
+}
+
+.space-evenly {
+    justify-content:space-evenly;
+}
+
 .tasksContainer {
     display: flex;
     flex-wrap: wrap;
     overflow-y:auto;
     width: 60vw;
     justify-content: flex-start;
+    align-items: flex-start;
     padding: 5px;
 }
 
@@ -29,22 +38,47 @@
     color: black;
 }
 
-.tasksContainer div {
+.tasksContainer > div {
     width: 31%;
-    height: 8rem;
-    padding: 20px 10px;
+    padding: 15px 10px;
     background-color: var(--white);
-    border: 2px solid var(--purple-lighter);
+    border: 2px solid var(--purple);
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
     border-radius: 32px;
+    flex-grow: 0 0;
     margin: 0 15px 20px 0;
     box-sizing: border-box;
 }
 
-.sortTasksContainer, .newTasksContainer{
+.tasksContainer > div > div {
+   display: flex;
+}
+
+#textContainer {
+    padding: 15px 0px;
+}
+
+#newTaskDiv {
+    display: flex;
+    height: 130px;
+    color: var(--purple-lighter);
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    border: 2px dashed var(--purple-lighter);
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+#newTaskDiv:hover {
+    color: var(--purple);
+    border-color: var(--purple);
+}
+
+.sortTasksContainer, .handleTasksContainer{
     margin: 15px;
     padding: 10px;
-    border: 2px solid var(--purple-lighter);
+    border: 2px solid var(--purple);
     border-radius: 10px;
     background-color: var(--white);
     display: flex;
@@ -63,7 +97,7 @@
     align-items: flex-start;
 }
 
-.newTasksContainer > form{
+.handleTasksContainer > form{
     padding: 15px;
     width: 80%;
     display: flex;
@@ -72,11 +106,11 @@
     align-items: flex-start;
 }
 
-.sortTasksContainer label, .newTasksContainer label{
+.sortTasksContainer label, .handleTasksContainer label{
     color: var(--grey);
 }
 
-.sortTasksContainer > h3,.newTasksContainer >h3, form h4 {
+.sortTasksContainer > h3,.handleTasksContainer >h3, form h4 {
     font-weight: 300;
 }
 
@@ -97,11 +131,33 @@ form > div {
     flex-direction: column;
 }
 
-button {
+.handleTasksContainer button {
     border-radius: 6px;
-    background-color: var(--purple-lighter);
-    color: black;
-    font-weight: bold;
+    background-color: var(--purple);
+    color: white;
     border: none;
     padding: 10px;
+}
+
+.iconOnly {
+    border-radius: 50%;
+    padding: 10px;
+    height: 30px;
+    width: 30px;
+    border: 1px solid;
+    border-color: inherit;
+}
+
+.handleTasksContainer[animate=true] {
+    animation: getAttention 0.4s 1;
+}
+
+@keyframes getAttention {
+   50% {
+       transform: scale(1.03);
+   } 
+
+   100% {
+       transform: scale(1);
+   }
 }

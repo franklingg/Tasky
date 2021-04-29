@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from 'react';
 import Header from '../../components/Header';
 import MyInput from '../../components/MyInput';
+import IconButton from '../../components/IconButton';
 import api from '../../service/api';
 import './styles.css';
 
@@ -8,7 +9,8 @@ export default function Tasks(props) {
     
     const [tasks,setTasks] = useState([]);
     const [selectedTask,setSelectedTask] = useState(null);
-    const [formValues,setFormValues] = useState({name:"",prioridade:"baixa"});
+    const [animate,setAnimate] = useState('false');
+    const [formValues,setFormValues] = useState({name:"",highPriority:"baixa"});
     const [sorting,setSorting] = useState(true);
     const token=localStorage.getItem('token');
     const [loading,setLoading] = useState(true);
@@ -32,24 +34,20 @@ export default function Tasks(props) {
         setLoading(false)
     }
 
-    function handleTaskFocus(event,task) {
-        setSelectedTask(task);
-        console.log(selectedTask);
-    }
-
-    async function handleDeleteTask() {
-        await api.delete('tasks/remove/'+selectedTask._id,{'headers':{'authorization':'Bearer '+token}});
+    async function handleDeleteTask(task) {
+        await api.delete('tasks/remove/'+task._id,{'headers':{'authorization':'Bearer '+token}});
         setSelectedTask(null);
         await refreshPage();
     }
 
-    function changeSorting(event) {
+    function changeSorting() {
         setSorting(!sorting);
     }
 
     async function handleSubmit(event) {
         event.preventDefault();
         await api.post('tasks/add',{'name':formValues.name,'highPriority':formValues.prioridade==='alta'},{'headers':{'authorization':'Bearer '+token}});
+        setFormValues({name:'',highPriority:'baixa'})
         await refreshPage();
     }
 
@@ -73,13 +71,25 @@ export default function Tasks(props) {
                 <div className="tasksContainer">
                     {tasks.map(task=>{
                         return(
-                            <div key={task._id} onClick={(event)=>handleTaskFocus(event,task)}>
-                                <p>{task.name}</p>
-                                <p>Prioridade: {task.highPriority?'Alta':'Baixa'}</p>
+                            <div key={task._id}>
+                                <div className='center'>
+                                    <p style={{display:'inline',marginRight:'5px'}}>Prioridade: </p>
+                                    {task.highPriority?<p style={{display:'inline',color:'purple'}}>Alta</p>:<p style={{display:'inline'}}>Baixa</p>}
+                                </div>
+                                <div className='center' id='textContainer'>
+                                    <p>{task.name}</p>
+                                </div>
+                                <div className='space-evenly'>
+                                    <IconButton iconName='edit' clickHandler={()=>setSelectedTask(task)} color='#343434'/>
+                                    <IconButton iconName='trash' clickHandler={()=>handleDeleteTask(task)} color='#cc414e'/>
+                                </div>
                             </div>
                         );
                     })}
-                    {tasks.length===0 && <span>Você ainda não criou nenhuma tarefa.</span>}
+                    <div id='newTaskDiv' 
+                    onClick={()=>selectedTask===null?setAnimate('true'):setSelectedTask(null)}>
+                        <i className="fa fa-plus" />
+                    </div>
                 </div>}
                 <div>
                     <div className="sortTasksContainer">
@@ -97,18 +107,18 @@ export default function Tasks(props) {
                         </div>
                     </div>
                     {selectedTask===null?
-                    <div className="newTasksContainer">
+                    <div className="handleTasksContainer" animate={animate} onAnimationEnd={()=>setAnimate('false')}>
                         <h3>Criar nova tarefa</h3>
                         <form onSubmit={handleSubmit}>
                             <MyInput label='Nome' varName='name' onChange={handleUpdateInput} value={formValues.name}/>
                             <div className='checkboxesWrapper'>
                                 <h4>Prioridade</h4>
                                 <label>
-                                    <input type="radio"  name="prioridade" onChange={handleUpdateInput} value="alta" checked={formValues.highPriority==="alta"}/>
+                                    <input type="radio"  name="highPriority" onChange={handleUpdateInput} value="alta" checked={formValues.highPriority==="alta"}/>
                                     Alta
                                 </label>
                                 <label>
-                                    <input type="radio"  name="prioridade" onChange={handleUpdateInput} value="baixa" checked={formValues.highPriority==="baixa"}/>
+                                    <input type="radio"  name="highPriority" onChange={handleUpdateInput} value="baixa" checked={formValues.highPriority==="baixa"}/>
                                     Baixa
                                 </label>
                             </div>
@@ -117,7 +127,7 @@ export default function Tasks(props) {
                             </div>
                         </form>
                     </div>:
-                    <div className="newTasksContainer">
+                    <div className="handleTasksContainer">
                         <h3>Editar tarefa</h3>
                         <form onSubmit={handleUpdate}>
                             <MyInput label='Nome' varName='name' onChange={(event)=>setSelectedTask({...selectedTask,[event.target.name]:event.target.value})} value={selectedTask.name}/>

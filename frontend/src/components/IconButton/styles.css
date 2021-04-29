@@ -1,0 +1,10 @@
+.iconButton {
+    border-radius: 50%;
+    border: 1px solid;
+    height: 30px;
+    width: 30px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
