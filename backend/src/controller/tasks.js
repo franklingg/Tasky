@@ -30,12 +30,8 @@ TaskController = {
 
     async createTask(req, res) {
         try {
-            var task = new Task(req.body);
+            const task = new Task(req.body);
             task.userId = req.id;
-        } catch (err) {
-            return res.status(400).send({ error: "Tarefa não criada" });
-        }
-        try {
             const response = await task.save();
             return res.status(201).send(response);
         } catch (err) {

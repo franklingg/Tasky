@@ -16,22 +16,14 @@ const UserController = {
         if (!email || !password) return res.status(400).send({ error: "Dados insuficientes" });
 
         try {
-            var user = await User.findOne({ email }).select('+password');
-        } catch (err) {
-            return res.status(400).send({ error: "Erro ao buscar usuário" });
-        }
+            let user = await User.findOne({ email }).select('+password');
+            
+            const same = await bcrypt.compare(password, user.password);
 
-        try {
-            var same = await bcrypt.compare(password, user.password);
-        } catch (err) {
-            return res.status(400).send({ error: "Senhas comparadas incorretamente" });
-        }
+            if (!same) return res.status(400).send({ error: "Senha incorreta" });
 
-        if (!same) return res.status(400).send({ error: "Senha incorreta" });
-
-        user.token_list.push(createUserToken(user._id));
-
-        try {
+            user.token_list.push(createUserToken(user._id));
+            
             await user.save();
         } catch (err) {
             return res.status(400).send({ error: "Não foi possível cadastrar usuário" });
@@ -48,19 +40,11 @@ const UserController = {
         try {
             const user = await User.findOne({ email });
             if (user) return res.status(400).send({ error: "Usuário já cadastrado" });
-        } catch (err) {
-            return res.status(400).send({ error: "Não foi possível verificar usuário" });
-        }
 
-        try {
-            var newUser = await User.create(req.body);
-        } catch (err) {
-            return res.status(400).send({ error: "Erro ao criar usuário" });
-        }
+            let newUser = await User.create(req.body);
 
-        newUser.token_list.push(createUserToken(newUser._id));
+            newUser.token_list.push(createUserToken(newUser._id));
 
-        try {
             await newUser.save();
         } catch (err) {
             return res.status(400).send({ error: "Erro ao salvar usuário" });
