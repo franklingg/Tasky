@@ -7,7 +7,7 @@ const tasksRoute = require('@routes/tasks');
 const usersRoute = require('@routes/users');
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({origin:'https://tasky-five.vercel.app'}));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
